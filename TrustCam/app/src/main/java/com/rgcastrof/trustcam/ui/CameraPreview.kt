@@ -1,0 +1,33 @@
+package com.rgcastrof.trustcam.ui
+
+import androidx.camera.view.LifecycleCameraController
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.viewinterop.AndroidView
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.camera.view.PreviewView
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxWidth
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun CameraPreviewScreen(
+    controller: LifecycleCameraController,
+    modifier: Modifier = Modifier.fillMaxWidth()
+        .aspectRatio(9f / 16f)
+) {
+    val lifecycleOwner = LocalLifecycleOwner.current
+    AndroidView(
+        factory = {
+            PreviewView(it).apply {
+                implementationMode = PreviewView.ImplementationMode.COMPATIBLE
+                scaleType = PreviewView.ScaleType.FIT_CENTER
+                this.controller = controller
+                controller.setZoomRatio(1f)
+                controller.bindToLifecycle(lifecycleOwner)
+            }
+        },
+        modifier = modifier
+    )
+}
