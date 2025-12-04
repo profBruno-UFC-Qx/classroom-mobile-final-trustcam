@@ -49,7 +49,6 @@ dependencies {
     implementation(libs.androidx.camera.video)
 
     implementation(libs.androidx.camera.view)
-    implementation(libs.camera.extensions)
     /* CameraX dependencies */
 
     implementation(libs.androidx.core.ktx)
