@@ -9,7 +9,7 @@ import com.rgcastrof.trustcam.ui.theme.TrustCamTheme
 import android.Manifest
 import android.content.pm.PackageManager
 import android.widget.Toast
-import androidx.camera.core.CameraSelector
+import androidx.activity.viewModels
 import androidx.camera.view.CameraController
 import androidx.camera.view.LifecycleCameraController
 import androidx.compose.foundation.background
@@ -31,6 +31,8 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.rememberBottomSheetScaffoldState
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -38,8 +40,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import com.rgcastrof.trustcam.ui.CameraPreviewScreen
+import com.rgcastrof.trustcam.viewmodel.CameraViewModel
 
 class MainActivity : ComponentActivity() {
+
+    private val viewModel: CameraViewModel by viewModels()
+
     private val cameraPermissionRequest = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { isGranted ->
@@ -82,6 +88,8 @@ class MainActivity : ComponentActivity() {
                         )
                     }
                 }
+                val uiState by viewModel.uiState.collectAsState()
+
                 BottomSheetScaffold(
                     scaffoldState = scaffoldState,
                     sheetPeekHeight = 0.dp,
@@ -95,9 +103,12 @@ class MainActivity : ComponentActivity() {
                             .fillMaxSize()
                             .background(Color.Black)
                     ) {
+                        controller.cameraSelector = uiState.cameraSelector
                         CameraPreviewScreen(
                             controller = controller,
-                            modifier = Modifier.fillMaxWidth().aspectRatio(9f/16f).align(Alignment.TopCenter)
+                            modifier = Modifier.fillMaxWidth()
+                                .aspectRatio(9f/16f)
+                                .align(Alignment.TopCenter)
                         )
                         Row(
                             modifier = Modifier
@@ -133,12 +144,7 @@ class MainActivity : ComponentActivity() {
                             }
 
                             IconButton(
-                                onClick = {
-                                    controller.cameraSelector =
-                                        if (controller.cameraSelector == CameraSelector.DEFAULT_BACK_CAMERA) {
-                                            CameraSelector.DEFAULT_FRONT_CAMERA
-                                        } else CameraSelector.DEFAULT_BACK_CAMERA
-                                },
+                                onClick = viewModel::switchCamera,
                                 modifier = Modifier.padding(42.dp)
                             ) {
                                 Icon(

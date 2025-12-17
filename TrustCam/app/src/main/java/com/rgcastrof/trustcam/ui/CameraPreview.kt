@@ -7,15 +7,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.camera.view.PreviewView
-import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxWidth
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CameraPreviewScreen(
     controller: LifecycleCameraController,
-    modifier: Modifier = Modifier.fillMaxWidth()
-        .aspectRatio(9f / 16f)
+    modifier: Modifier = Modifier
 ) {
     val lifecycleOwner = LocalLifecycleOwner.current
     AndroidView(
