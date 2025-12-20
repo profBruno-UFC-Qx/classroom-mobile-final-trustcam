@@ -39,13 +39,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
-import com.rgcastrof.trustcam.ui.CameraPreviewScreen
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.rgcastrof.trustcam.ui.CameraPreview
 import com.rgcastrof.trustcam.viewmodel.CameraViewModel
 
 class MainActivity : ComponentActivity() {
-
-    private val viewModel: CameraViewModel by viewModels()
-
     private val cameraPermissionRequest = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { isGranted ->
@@ -78,6 +76,7 @@ class MainActivity : ComponentActivity() {
     private fun setCameraPreview() {
         enableEdgeToEdge()
         setContent {
+            val viewModel: CameraViewModel = viewModel(factory = CameraViewModel.Factory)
             TrustCamTheme {
                 val scaffoldState = rememberBottomSheetScaffoldState()
                 val controller = remember {
