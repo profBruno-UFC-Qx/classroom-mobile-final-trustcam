@@ -8,8 +8,10 @@ import androidx.activity.result.contract.ActivityResultContracts
 import com.rgcastrof.trustcam.ui.theme.TrustCamTheme
 import android.Manifest
 import android.content.pm.PackageManager
+import android.util.Log
 import android.widget.Toast
-import androidx.activity.viewModels
+import androidx.camera.core.ImageCapture
+import androidx.camera.core.ImageCaptureException
 import androidx.camera.view.CameraController
 import androidx.camera.view.LifecycleCameraController
 import androidx.compose.foundation.background
@@ -42,6 +44,7 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.rgcastrof.trustcam.ui.CameraPreview
 import com.rgcastrof.trustcam.viewmodel.CameraViewModel
+import java.io.File
 
 class MainActivity : ComponentActivity() {
     private val cameraPermissionRequest = registerForActivityResult(
@@ -72,6 +75,32 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
+
+    private fun takePhoto(
+        controller: LifecycleCameraController,
+        onPhotoSaved: (String) -> Unit
+    ) {
+        val photoFile = File(
+            applicationContext.filesDir,
+            "trustcam_${System.currentTimeMillis()}.jpg"
+        )
+        val outputFileOptions = ImageCapture.OutputFileOptions.Builder(photoFile).build()
+        controller.takePicture(
+            outputFileOptions,
+            ContextCompat.getMainExecutor(applicationContext),
+            object : ImageCapture.OnImageSavedCallback {
+                override fun onError(exception: ImageCaptureException) {
+                    Log.e("Camera", "Couldn't take photo: ", exception)
+                }
+
+                override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
+                    val savedUri = outputFileResults.savedUri
+                    onPhotoSaved(savedUri.toString())
+                }
+            }
+        )
+    }
+
     @OptIn(ExperimentalMaterial3Api::class)
     private fun setCameraPreview() {
         enableEdgeToEdge()
@@ -103,7 +132,7 @@ class MainActivity : ComponentActivity() {
                             .background(Color.Black)
                     ) {
                         controller.cameraSelector = uiState.cameraSelector
-                        CameraPreviewScreen(
+                        CameraPreview(
                             controller = controller,
                             modifier = Modifier.fillMaxWidth()
                                 .aspectRatio(9f/16f)
@@ -119,8 +148,7 @@ class MainActivity : ComponentActivity() {
                             horizontalArrangement = Arrangement.SpaceAround
                         ) {
                             IconButton(
-                                onClick = {
-                                },
+                                onClick = { TODO() },
                                 modifier = Modifier.padding(42.dp)
                             ) {
                                 Icon(
@@ -132,6 +160,16 @@ class MainActivity : ComponentActivity() {
 
                             IconButton(
                                 onClick = {
+                                    takePhoto(
+                                        controller = controller,
+                                        onPhotoSaved = { uriString ->
+                                            viewModel.storePhotoInDevice(uriString)
+                                            Toast.makeText(
+                                                applicationContext, "Photo taken successful!",
+                                                Toast.LENGTH_SHORT
+                                            ).show()
+                                        }
+                                    )
                                 },
                                 modifier = Modifier.padding(42.dp)
                             ) {
