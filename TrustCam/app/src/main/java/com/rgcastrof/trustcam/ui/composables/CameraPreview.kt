@@ -1,4 +1,4 @@
-package com.rgcastrof.trustcam.ui
+package com.rgcastrof.trustcam.ui.composables
 
 import androidx.camera.view.LifecycleCameraController
 import androidx.compose.material3.ExperimentalMaterial3Api
