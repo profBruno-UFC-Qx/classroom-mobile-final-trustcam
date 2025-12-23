@@ -34,6 +34,7 @@ class CameraViewModel(
             )
         }
     }
+
     fun storePhotoInDevice(photoUriString: String) {
         if (photoUriString.isBlank()) return
         viewModelScope.launch {
