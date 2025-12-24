@@ -12,7 +12,9 @@ import com.rgcastrof.trustcam.data.model.Photo
 import com.rgcastrof.trustcam.data.repository.CameraRepository
 import com.rgcastrof.trustcam.uistate.CameraUiState
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -20,18 +22,36 @@ class CameraViewModel(
     private val cameraRepository: CameraRepository
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(CameraUiState())
-    val uiState = _uiState.asStateFlow()
+    private val _cameraSelector = MutableStateFlow(CameraSelector.DEFAULT_BACK_CAMERA)
+    private val allPhotosFromDatabase = cameraRepository.getAllPhotos()
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = emptyList()
+        )
+
+    val uiState = combine(
+        _cameraSelector,
+        allPhotosFromDatabase,
+
+    ) { selector, photos ->
+        CameraUiState(
+            cameraSelector = selector,
+            photos = photos
+        )
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.Lazily,
+        initialValue = CameraUiState()
+    )
 
     fun switchCamera() {
-        _uiState.update {
-            it.copy(
-                cameraSelector = if (it.cameraSelector == CameraSelector.DEFAULT_BACK_CAMERA) {
-                    CameraSelector.DEFAULT_FRONT_CAMERA
-                } else {
-                    CameraSelector.DEFAULT_BACK_CAMERA
-                }
-            )
+        _cameraSelector.update { current ->
+            if (current == CameraSelector.DEFAULT_BACK_CAMERA) {
+                CameraSelector.DEFAULT_FRONT_CAMERA
+            } else {
+                CameraSelector.DEFAULT_BACK_CAMERA
+            }
         }
     }
 
