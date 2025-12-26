@@ -4,7 +4,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
@@ -24,14 +23,11 @@ fun CameraControls(
     onOpenGallery: () -> Unit,
     onTakePhoto: () -> Unit,
     onSwitchCamera: () -> Unit,
-    modifier: Modifier = Modifier
 ) {
     Row(
-        modifier = modifier
+        modifier = Modifier
             .fillMaxWidth()
-            .background(Color.Black)
-            .height(200.dp)
-            .padding(16.dp),
+            .background(Color.White),
         horizontalArrangement = Arrangement.SpaceAround,
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -42,7 +38,7 @@ fun CameraControls(
             Icon(
                 imageVector = Icons.Default.Photo,
                 contentDescription = "Open gallery",
-                modifier = Modifier.size(50.dp)
+                modifier = Modifier.size(50.dp),
             )
         }
 
