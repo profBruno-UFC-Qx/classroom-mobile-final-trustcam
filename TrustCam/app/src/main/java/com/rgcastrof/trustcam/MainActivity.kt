@@ -9,7 +9,6 @@ import android.content.pm.PackageManager
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.core.content.ContextCompat
-import com.rgcastrof.trustcam.ui.screens.CameraScreen
 
 class MainActivity : ComponentActivity() {
     private val cameraPermissionRequest = registerForActivityResult(
@@ -44,7 +43,7 @@ class MainActivity : ComponentActivity() {
     private fun setAppScreen() {
         enableEdgeToEdge()
         setContent {
-            CameraScreen(applicationContext)
+            TrustCamNavigation(applicationContext)
         }
     }
 }
