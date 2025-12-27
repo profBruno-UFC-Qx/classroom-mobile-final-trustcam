@@ -1,15 +1,20 @@
 package com.rgcastrof.trustcam.ui.composables
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.rgcastrof.trustcam.data.model.Photo
@@ -17,7 +22,8 @@ import com.rgcastrof.trustcam.data.model.Photo
 @Composable
 fun PhotoGrid(
     photos: List<Photo>,
-    modifier: Modifier = Modifier
+    onPhotoClick: (Int) -> Unit,
+    modifier: Modifier
 ) {
     if (photos.isEmpty()) {
         Box(
@@ -28,13 +34,20 @@ fun PhotoGrid(
         }
     } else {
         LazyVerticalGrid(
-            columns = GridCells.Adaptive(minSize = 120.dp)
+            columns = GridCells.Adaptive(minSize = 100.dp),
+            modifier = modifier
         ) {
             items(photos) { photo ->
                 AsyncImage(
                     model = photo.filePath,
-                    contentDescription = "Photo took",
-                    modifier = Modifier.fillMaxWidth()
+                    contentDescription = "Captured photo",
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .aspectRatio(1f)
+                        .padding(5.dp)
+                        .clip(RoundedCornerShape(10.dp))
+                        .clickable { onPhotoClick(photo.id) },
+                    contentScale = ContentScale.Crop
                 )
             }
         }

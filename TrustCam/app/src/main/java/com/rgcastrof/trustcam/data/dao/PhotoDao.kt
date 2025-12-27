@@ -13,4 +13,7 @@ interface PhotoDao {
 
     @Query("SELECT * FROM photos ORDER BY timestamp DESC")
     fun getAllPhotos(): Flow<List<Photo>>
+
+    @Query("SELECT * FROM photos WHERE id = :photoId")
+    suspend fun getPhotoById(photoId: Int?): Photo?
 }

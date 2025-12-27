@@ -5,5 +5,6 @@ import com.rgcastrof.trustcam.data.model.Photo
 
 data class CameraUiState(
     val cameraSelector: CameraSelector = CameraSelector.DEFAULT_BACK_CAMERA,
-    val photos: List<Photo> = emptyList()
+    val photos: List<Photo> = emptyList(),
+    val selectedPhoto: Photo? = null
 )
