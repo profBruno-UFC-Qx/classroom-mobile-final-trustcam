@@ -23,7 +23,7 @@ class CameraViewModel(
 ) : ViewModel() {
 
     private val _cameraSelector = MutableStateFlow(CameraSelector.DEFAULT_BACK_CAMERA)
-    private val _selectedPhoto = MutableStateFlow<Photo?>(null)
+    private val _selectedPhoto = MutableStateFlow<Photo>(Photo(-1, "", 0))
     private val allPhotosFromDatabase = cameraRepository.getAllPhotos()
         .stateIn(
             scope = viewModelScope,
@@ -65,6 +65,12 @@ class CameraViewModel(
                 timestamp = System.currentTimeMillis()
             )
             cameraRepository.insert(photo)
+        }
+    }
+
+    fun deletePhoto(photo: Photo) {
+        viewModelScope.launch {
+            cameraRepository.delete(photo)
         }
     }
 

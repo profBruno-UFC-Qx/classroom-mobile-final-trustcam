@@ -7,6 +7,7 @@ class CameraRepository(
     private val dao: PhotoDao
 ) {
     suspend fun insert(photo: Photo) = dao.insertPhoto(photo)
-    suspend fun getPhotoById(photoId: Int?) = dao.getPhotoById(photoId)
+    suspend fun delete(photo: Photo) = dao.deletePhoto(photo)
     fun getAllPhotos() = dao.getAllPhotos()
+    suspend fun getPhotoById(photoId: Int?) = dao.getPhotoById(photoId)
 }
