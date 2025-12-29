@@ -74,8 +74,10 @@ private fun takePhoto(
     controller: LifecycleCameraController,
     onPhotoCaptured: (String) -> Unit
 ) {
+    val photosDir = File(context.filesDir, "my_images")
+    if (!photosDir.exists()) photosDir.mkdirs()
     val photoFile = File(
-        context.filesDir,
+        photosDir,
         "trustcam_${System.currentTimeMillis()}.jpg"
     )
     val outputFileOptions = ImageCapture.OutputFileOptions.Builder(photoFile).build()
@@ -88,8 +90,7 @@ private fun takePhoto(
             }
 
             override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
-                val savedUri = outputFileResults.savedUri
-                onPhotoCaptured(savedUri.toString())
+                onPhotoCaptured(photoFile.absolutePath)
             }
         }
     )

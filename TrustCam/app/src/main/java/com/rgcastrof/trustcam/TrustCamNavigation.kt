@@ -64,6 +64,7 @@ fun TrustCamNavigation(context: Context) {
             LaunchedEffect(photoId) { viewModel.getPhotoById(photoId) }
             val uiState by viewModel.uiState.collectAsState()
             PhotoDetailScreen(
+                context = context,
                 photos = uiState.photos,
                 initialPhotoId = photoId,
                 onBackClick = { navController.popBackStack() },
