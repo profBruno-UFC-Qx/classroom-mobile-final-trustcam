@@ -24,6 +24,7 @@ class CameraViewModel(
 
     private val _cameraSelector = MutableStateFlow(CameraSelector.DEFAULT_BACK_CAMERA)
     private val _selectedPhoto = MutableStateFlow<Photo>(Photo(-1, "", 0))
+    private val _detailOverlay = MutableStateFlow<Boolean>(true)
     private val allPhotosFromDatabase = cameraRepository.getAllPhotos()
         .stateIn(
             scope = viewModelScope,
@@ -35,11 +36,13 @@ class CameraViewModel(
         _cameraSelector,
         allPhotosFromDatabase,
         _selectedPhoto,
-    ) { selector, photos, selectedPhoto ->
+        _detailOverlay,
+    ) { selector, photos, selectedPhoto, detailOverlay ->
         CameraUiState(
             cameraSelector = selector,
             photos = photos,
-            selectedPhoto = selectedPhoto
+            selectedPhoto = selectedPhoto,
+            detailOverlay = detailOverlay
         )
     }.stateIn(
         scope = viewModelScope,
@@ -54,6 +57,12 @@ class CameraViewModel(
             } else {
                 CameraSelector.DEFAULT_BACK_CAMERA
             }
+        }
+    }
+
+    fun toggleDetailOverlay() {
+        _detailOverlay.update { current ->
+            !current
         }
     }
 
