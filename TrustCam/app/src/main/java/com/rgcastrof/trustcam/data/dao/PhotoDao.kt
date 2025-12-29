@@ -1,6 +1,7 @@
 package com.rgcastrof.trustcam.data.dao
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import com.rgcastrof.trustcam.data.model.Photo
@@ -11,9 +12,12 @@ interface PhotoDao {
     @Insert
     suspend fun insertPhoto(photo: Photo)
 
+    @Delete
+    suspend fun deletePhoto(photo: Photo)
+
     @Query("SELECT * FROM photos ORDER BY timestamp DESC")
     fun getAllPhotos(): Flow<List<Photo>>
 
     @Query("SELECT * FROM photos WHERE id = :photoId")
-    suspend fun getPhotoById(photoId: Int?): Photo?
+    suspend fun getPhotoById(photoId: Int?): Photo
 }

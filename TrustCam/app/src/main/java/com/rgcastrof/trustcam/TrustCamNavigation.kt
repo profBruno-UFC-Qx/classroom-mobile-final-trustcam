@@ -66,6 +66,7 @@ fun TrustCamNavigation(context: Context) {
             PhotoDetailScreen(
                 photo = uiState.selectedPhoto,
                 onBackClick = { navController.popBackStack() },
+                onDeleteClick = viewModel::deletePhoto,
             )
         }
     }
