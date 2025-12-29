@@ -8,7 +8,12 @@ import android.Manifest
 import android.content.pm.PackageManager
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.ui.Modifier
 import androidx.core.content.ContextCompat
+import com.rgcastrof.trustcam.ui.theme.TrustCamTheme
 
 class MainActivity : ComponentActivity() {
     private val cameraPermissionRequest = registerForActivityResult(
@@ -43,7 +48,14 @@ class MainActivity : ComponentActivity() {
     private fun setAppScreen() {
         enableEdgeToEdge()
         setContent {
-            TrustCamNavigation(applicationContext)
+            TrustCamTheme {
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colorScheme.background
+                ) {
+                    TrustCamNavigation(applicationContext)
+                }
+            }
         }
     }
 }

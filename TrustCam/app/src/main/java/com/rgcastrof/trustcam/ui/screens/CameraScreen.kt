@@ -13,7 +13,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import com.rgcastrof.trustcam.ui.composables.CameraPreview
-import com.rgcastrof.trustcam.ui.theme.TrustCamTheme
 import androidx.camera.core.ImageCapture
 import androidx.camera.core.ImageCaptureException
 import androidx.compose.foundation.layout.Column
@@ -31,44 +30,42 @@ fun CameraScreen(
     onNavigateToGallery: () -> Unit,
     context: Context
 ) {
-    TrustCamTheme {
-        val controller = remember {
-            LifecycleCameraController(context).apply {
-                setEnabledUseCases(
-                    CameraController.IMAGE_CAPTURE or
-                            CameraController.VIDEO_CAPTURE
+    val controller = remember {
+        LifecycleCameraController(context).apply {
+            setEnabledUseCases(
+                CameraController.IMAGE_CAPTURE or
+                        CameraController.VIDEO_CAPTURE
+            )
+        }
+    }
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+    ) {
+        controller.cameraSelector = uiState.cameraSelector
+        CameraPreview(
+            controller = controller,
+            modifier = Modifier.fillMaxWidth()
+                .aspectRatio(9f/16f)
+        )
+
+        CameraControls(
+            onOpenGallery = {
+                onNavigateToGallery()
+            },
+            onTakePhoto = {
+                takePhoto(
+                    context = context,
+                    controller = controller,
+                    onPhotoCaptured = { uriString ->
+                        onPhotoSaved(uriString)
+                        Toast.makeText(context, "Photo taken!", Toast.LENGTH_SHORT).show()
+                    }
                 )
-            }
-        }
-
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-        ) {
-            controller.cameraSelector = uiState.cameraSelector
-            CameraPreview(
-                controller = controller,
-                modifier = Modifier.fillMaxWidth()
-                    .aspectRatio(9f/16f)
-            )
-
-            CameraControls(
-                onOpenGallery = {
-                    onNavigateToGallery()
-                },
-                onTakePhoto = {
-                    takePhoto(
-                        context = context,
-                        controller = controller,
-                        onPhotoCaptured = { uriString ->
-                            onPhotoSaved(uriString)
-                            Toast.makeText(context, "Photo taken!", Toast.LENGTH_SHORT).show()
-                        }
-                    )
-                },
-                onSwitchCamera = onSwitchCamera,
-            )
-        }
+            },
+            onSwitchCamera = onSwitchCamera,
+        )
     }
 }
 
