@@ -22,6 +22,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import com.rgcastrof.trustcam.data.model.Photo
+import java.time.Instant
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 
 @Composable
 fun PhotoDetailScreen(
@@ -39,6 +42,10 @@ fun PhotoDetailScreen(
             contentScale = ContentScale.Fit
         )
         Row(modifier = Modifier.align(Alignment.TopStart)) {
+            val dateFormat = DateTimeFormatter
+                    .ofPattern("MMM dd, yyyy\nHH:mm:ss")
+                    .withZone(ZoneId.systemDefault())
+                    .format(Instant.ofEpochMilli(currentPage.timestamp))
             IconButton(
                 onClick = onBackClick,
             ) {
