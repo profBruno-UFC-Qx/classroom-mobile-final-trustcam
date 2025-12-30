@@ -16,6 +16,7 @@ import com.rgcastrof.trustcam.ui.composables.CameraPreview
 import androidx.camera.core.ImageCapture
 import androidx.camera.core.ImageCaptureException
 import androidx.compose.foundation.layout.Column
+import androidx.compose.runtime.LaunchedEffect
 import androidx.core.content.ContextCompat
 import com.rgcastrof.trustcam.ui.composables.CameraControls
 import com.rgcastrof.trustcam.uistate.CameraUiState
@@ -39,11 +40,14 @@ fun CameraScreen(
         }
     }
 
+    LaunchedEffect(uiState.cameraSelector) {
+        controller.cameraSelector = uiState.cameraSelector
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
     ) {
-        controller.cameraSelector = uiState.cameraSelector
         CameraPreview(
             controller = controller,
             modifier = Modifier.fillMaxWidth()

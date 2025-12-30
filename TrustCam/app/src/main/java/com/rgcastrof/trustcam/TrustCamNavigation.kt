@@ -3,7 +3,6 @@ package com.rgcastrof.trustcam
 import android.content.Context
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -17,6 +16,8 @@ import com.rgcastrof.trustcam.ui.screens.CameraScreen
 import com.rgcastrof.trustcam.ui.screens.GalleryScreen
 import com.rgcastrof.trustcam.ui.screens.PhotoDetailScreen
 import com.rgcastrof.trustcam.viewmodel.CameraViewModel
+import com.rgcastrof.trustcam.viewmodel.GalleryViewModel
+import com.rgcastrof.trustcam.viewmodel.PhotoDetailViewModel
 
 sealed class Screen(val route: String) {
     object CameraScreen : Screen("camera_screen")
@@ -29,10 +30,10 @@ sealed class Screen(val route: String) {
 @Composable
 fun TrustCamNavigation(context: Context) {
     val navController = rememberNavController()
-    val viewModel: CameraViewModel = viewModel(factory = CameraViewModel.Factory)
 
     NavHost(navController = navController, startDestination = Screen.CameraScreen.route) {
         composable(route = Screen.CameraScreen.route) {
+            val viewModel: CameraViewModel = viewModel(factory = CameraViewModel.Factory)
             val uiState by viewModel.uiState.collectAsState()
             CameraScreen(
                 uiState = uiState,
@@ -45,6 +46,7 @@ fun TrustCamNavigation(context: Context) {
             )
         }
         composable(route = Screen.GalleryScreen.route) {
+            val viewModel: GalleryViewModel = viewModel(factory = GalleryViewModel.Factory)
             val uiState by viewModel.uiState.collectAsState()
             GalleryScreen(
                 photos = uiState.photos,
@@ -59,15 +61,14 @@ fun TrustCamNavigation(context: Context) {
             arguments = listOf(
                 navArgument("photoId") { type = NavType.IntType }
             )
-        ) { entry ->
-            val photoId = entry.arguments?.getInt("photoId")
-            LaunchedEffect(photoId) { viewModel.getPhotoById(photoId) }
+        ) {
+            val viewModel: PhotoDetailViewModel = viewModel(factory = PhotoDetailViewModel.Factory)
             val uiState by viewModel.uiState.collectAsState()
             PhotoDetailScreen(
                 context = context,
                 photos = uiState.photos,
                 showOverlay = uiState.detailOverlay,
-                initialPhotoId = photoId,
+                initialPhotoId = uiState.selectedPhotoId,
                 onBackClick = { navController.popBackStack() },
                 onDeleteClick = viewModel::deletePhoto,
                 onImageClick = viewModel::toggleDetailOverlay
