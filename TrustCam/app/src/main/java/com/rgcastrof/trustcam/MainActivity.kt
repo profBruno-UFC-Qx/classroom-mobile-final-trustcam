@@ -33,17 +33,17 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        when (PackageManager.PERMISSION_GRANTED) {
-            ContextCompat.checkSelfPermission(
-                this,
-                Manifest.permission.CAMERA
-            ) -> {
-                setAppScreen()
-            } else -> {
-                cameraPermissionRequest.launch(Manifest.permission.CAMERA)
-            }
+        if (hasCameraPermission()) {
+            setAppScreen()
+        } else {
+            cameraPermissionRequest.launch(Manifest.permission.CAMERA)
         }
     }
+
+    private fun hasCameraPermission(): Boolean = ContextCompat.checkSelfPermission(
+        this,
+        Manifest.permission.CAMERA
+    ) == PackageManager.PERMISSION_GRANTED
 
     private fun setAppScreen() {
         enableEdgeToEdge()
