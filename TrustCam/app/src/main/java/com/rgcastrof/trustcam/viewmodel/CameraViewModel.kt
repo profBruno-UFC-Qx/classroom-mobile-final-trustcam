@@ -1,6 +1,7 @@
 package com.rgcastrof.trustcam.viewmodel
 
 import androidx.camera.core.CameraSelector
+import androidx.camera.core.ImageCapture
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
@@ -33,6 +34,15 @@ class CameraViewModel(
         _uiState.update { it.copy(cameraSelector = nextSelector) }
     }
 
+    fun toggleFlash() {
+        val currentMode = _uiState.value.flashMode
+        val nextMode = when(currentMode) {
+            ImageCapture.FLASH_MODE_OFF -> ImageCapture.FLASH_MODE_ON
+            ImageCapture.FLASH_MODE_ON -> ImageCapture.FLASH_MODE_AUTO
+            else -> ImageCapture.FLASH_MODE_OFF
+        }
+        _uiState.update { it.copy(flashMode = nextMode) }
+    }
 
     fun storePhotoInDevice(photoUriString: String) {
         if (photoUriString.isBlank()) return

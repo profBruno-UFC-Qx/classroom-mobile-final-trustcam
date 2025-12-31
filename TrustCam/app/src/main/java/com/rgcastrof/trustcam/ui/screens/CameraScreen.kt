@@ -32,19 +32,23 @@ fun CameraScreen(
     onPhotoSaved: (String) -> Unit,
     onSwitchCamera: () -> Unit,
     onNavigateToGallery: () -> Unit,
+    onToggleFlashMode: () -> Unit,
     context: Context
 ) {
     val controller = remember {
         LifecycleCameraController(context).apply {
             setEnabledUseCases(
-                CameraController.IMAGE_CAPTURE or
-                        CameraController.VIDEO_CAPTURE
+                CameraController.IMAGE_CAPTURE
             )
         }
     }
 
     LaunchedEffect(uiState.cameraSelector) {
         controller.cameraSelector = uiState.cameraSelector
+    }
+
+    LaunchedEffect(uiState.flashMode) {
+        controller.imageCaptureFlashMode = uiState.flashMode
     }
 
     Column(
@@ -57,7 +61,11 @@ fun CameraScreen(
                 modifier = Modifier.fillMaxWidth()
                     .aspectRatio(9f/16f)
             )
-            CameraOptionsMenu(modifier = Modifier.align(Alignment.BottomEnd))
+            CameraOptionsMenu(
+                uiState = uiState,
+                modifier = Modifier.align(Alignment.BottomEnd),
+                onToggleFlashMode = onToggleFlashMode
+            )
         }
 
         CameraControls(

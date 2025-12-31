@@ -42,7 +42,8 @@ fun TrustCamNavigation(context: Context) {
                 onNavigateToGallery = {
                     navController.navigate(route = Screen.GalleryScreen.route)
                 },
-                context = context
+                context = context,
+                onToggleFlashMode = viewModel::toggleFlash
             )
         }
         composable(route = Screen.GalleryScreen.route) {
