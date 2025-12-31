@@ -15,10 +15,13 @@ import androidx.compose.ui.Modifier
 import com.rgcastrof.trustcam.ui.composables.CameraPreview
 import androidx.camera.core.ImageCapture
 import androidx.camera.core.ImageCaptureException
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.Alignment
 import androidx.core.content.ContextCompat
 import com.rgcastrof.trustcam.ui.composables.CameraControls
+import com.rgcastrof.trustcam.ui.composables.CameraOptionsMenu
 import com.rgcastrof.trustcam.uistate.CameraUiState
 import java.io.File
 
@@ -48,11 +51,14 @@ fun CameraScreen(
         modifier = Modifier
             .fillMaxSize()
     ) {
-        CameraPreview(
-            controller = controller,
-            modifier = Modifier.fillMaxWidth()
-                .aspectRatio(9f/16f)
-        )
+        Box(modifier = Modifier.fillMaxWidth()) {
+            CameraPreview(
+                controller = controller,
+                modifier = Modifier.fillMaxWidth()
+                    .aspectRatio(9f/16f)
+            )
+            CameraOptionsMenu(modifier = Modifier.align(Alignment.BottomEnd))
+        }
 
         CameraControls(
             onOpenGallery = {
