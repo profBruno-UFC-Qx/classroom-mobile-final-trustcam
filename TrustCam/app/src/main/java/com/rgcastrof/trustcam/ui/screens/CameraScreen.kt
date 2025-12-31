@@ -33,6 +33,7 @@ fun CameraScreen(
     onSwitchCamera: () -> Unit,
     onNavigateToGallery: () -> Unit,
     onToggleFlashMode: () -> Unit,
+    onToggleGridState: () -> Unit,
     context: Context
 ) {
     val controller = remember {
@@ -57,6 +58,7 @@ fun CameraScreen(
     ) {
         Box(modifier = Modifier.fillMaxWidth()) {
             CameraPreview(
+                gridState = uiState.gridStateOn,
                 controller = controller,
                 modifier = Modifier.fillMaxWidth()
                     .aspectRatio(9f/16f)
@@ -64,7 +66,9 @@ fun CameraScreen(
             CameraOptionsMenu(
                 uiState = uiState,
                 modifier = Modifier.align(Alignment.BottomEnd),
-                onToggleFlashMode = onToggleFlashMode
+                gridStateOn = uiState.gridStateOn,
+                onToggleFlashMode = onToggleFlashMode,
+                onToggleGridState = onToggleGridState
             )
         }
 

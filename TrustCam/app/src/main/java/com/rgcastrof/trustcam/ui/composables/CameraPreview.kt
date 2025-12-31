@@ -7,10 +7,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.camera.view.PreviewView
+import androidx.compose.foundation.layout.padding
+import androidx.compose.ui.unit.dp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CameraPreview(
+    gridState: Boolean,
     controller: LifecycleCameraController,
     modifier: Modifier = Modifier
 ) {
@@ -27,4 +30,5 @@ fun CameraPreview(
         },
         modifier = modifier
     )
+    if (gridState) { CameraGridOverlay(modifier = modifier) }
 }

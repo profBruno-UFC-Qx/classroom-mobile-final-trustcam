@@ -44,6 +44,11 @@ class CameraViewModel(
         _uiState.update { it.copy(flashMode = nextMode) }
     }
 
+    fun toggleGridState() {
+        val currentGridState = _uiState.value.gridStateOn
+        _uiState.update { it.copy(gridStateOn = !currentGridState) }
+    }
+
     fun storePhotoInDevice(photoUriString: String) {
         if (photoUriString.isBlank()) return
         viewModelScope.launch {

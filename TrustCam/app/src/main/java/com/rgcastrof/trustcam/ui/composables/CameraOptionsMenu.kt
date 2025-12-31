@@ -13,6 +13,7 @@ import androidx.compose.material.icons.filled.Dashboard
 import androidx.compose.material.icons.filled.FlashAuto
 import androidx.compose.material.icons.filled.FlashOff
 import androidx.compose.material.icons.filled.FlashOn
+import androidx.compose.material.icons.filled.GridOff
 import androidx.compose.material.icons.filled.GridOn
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -31,7 +32,9 @@ import com.rgcastrof.trustcam.uistate.CameraUiState
 fun CameraOptionsMenu(
     uiState: CameraUiState,
     modifier: Modifier = Modifier,
+    gridStateOn: Boolean,
     onToggleFlashMode: () -> Unit,
+    onToggleGridState: () -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }
     Row(
@@ -45,9 +48,9 @@ fun CameraOptionsMenu(
             Row(modifier = Modifier.padding(end = 12.dp)) {
                 MenuItem(
                     modifier = Modifier.padding(end = 22.dp),
-                    icon = Icons.Default.GridOn,
-                    contentDescription = null,
-                    onClick = {}
+                    icon = if (gridStateOn) Icons.Default.GridOn else Icons.Default.GridOff,
+                    contentDescription = "Camera grid button",
+                    onClick = onToggleGridState
                 )
                 /* TODO: Implement aspect ratio */
                 Text(
@@ -61,14 +64,14 @@ fun CameraOptionsMenu(
                         ImageCapture.FLASH_MODE_OFF -> Icons.Default.FlashOff
                         else -> Icons.Default.FlashAuto
                     },
-                    contentDescription = null,
+                    contentDescription = "Camera flash button",
                     onClick = onToggleFlashMode
                 )
             }
         }
         Icon(
             imageVector = if (expanded) Icons.Default.Close else Icons.Default.Dashboard,
-            contentDescription = null,
+            contentDescription = "Camera dashboard button",
             modifier = modifier
                 .clickable { expanded = !expanded }
         )
@@ -79,7 +82,7 @@ fun CameraOptionsMenu(
 private fun MenuItem(
     modifier: Modifier,
     icon: ImageVector,
-    contentDescription: String?,
+    contentDescription: String,
     onClick: () -> Unit
 ) {
     Icon(
