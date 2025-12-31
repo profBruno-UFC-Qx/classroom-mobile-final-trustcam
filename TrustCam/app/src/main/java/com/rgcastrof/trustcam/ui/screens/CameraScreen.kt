@@ -15,10 +15,13 @@ import androidx.compose.ui.Modifier
 import com.rgcastrof.trustcam.ui.composables.CameraPreview
 import androidx.camera.core.ImageCapture
 import androidx.camera.core.ImageCaptureException
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.Alignment
 import androidx.core.content.ContextCompat
 import com.rgcastrof.trustcam.ui.composables.CameraControls
+import com.rgcastrof.trustcam.ui.composables.CameraOptionsMenu
 import com.rgcastrof.trustcam.uistate.CameraUiState
 import java.io.File
 
@@ -29,13 +32,14 @@ fun CameraScreen(
     onPhotoSaved: (String) -> Unit,
     onSwitchCamera: () -> Unit,
     onNavigateToGallery: () -> Unit,
+    onToggleFlashMode: () -> Unit,
+    onToggleGridState: () -> Unit,
     context: Context
 ) {
     val controller = remember {
         LifecycleCameraController(context).apply {
             setEnabledUseCases(
-                CameraController.IMAGE_CAPTURE or
-                        CameraController.VIDEO_CAPTURE
+                CameraController.IMAGE_CAPTURE
             )
         }
     }
@@ -44,15 +48,29 @@ fun CameraScreen(
         controller.cameraSelector = uiState.cameraSelector
     }
 
+    LaunchedEffect(uiState.flashMode) {
+        controller.imageCaptureFlashMode = uiState.flashMode
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
     ) {
-        CameraPreview(
-            controller = controller,
-            modifier = Modifier.fillMaxWidth()
-                .aspectRatio(9f/16f)
-        )
+        Box(modifier = Modifier.fillMaxWidth()) {
+            CameraPreview(
+                gridState = uiState.gridStateOn,
+                controller = controller,
+                modifier = Modifier.fillMaxWidth()
+                    .aspectRatio(9f/16f)
+            )
+            CameraOptionsMenu(
+                uiState = uiState,
+                modifier = Modifier.align(Alignment.BottomEnd),
+                gridStateOn = uiState.gridStateOn,
+                onToggleFlashMode = onToggleFlashMode,
+                onToggleGridState = onToggleGridState
+            )
+        }
 
         CameraControls(
             onOpenGallery = {
